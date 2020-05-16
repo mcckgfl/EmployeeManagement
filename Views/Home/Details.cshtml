@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Employee Details";
-    var photoPath = "~/Images/" + (Model.Employee.PhotoPath ?? "noimage.jpg");
+    var photoPath = "/images/" + (@Model.Employee.PhotoPath ?? "noimage.jpg");
 }
 
 <div class="row justify-content-center m-3">

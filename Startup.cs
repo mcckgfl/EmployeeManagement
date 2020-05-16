@@ -57,10 +57,10 @@ namespace EmployeeManagement
             //app.UseMvcWithDefaultRoute();
 
             app.UseMvc(routes => {
-                routes.MapRoute("default", "{Controller=Home}/{action=Index}/{id?}");
+                routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
                         });
 
-            app.UseRouting();
+            //app.UseRouting();
 
             //app.UseAuthorization();
 

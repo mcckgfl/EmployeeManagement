@@ -35,6 +35,12 @@ namespace EmployeeManagement.Controllers
             return Json(model);
         }
 
+        [HttpGet]
+        public ViewResult Create()
+        {
+            return View();
+        }
+
         [HttpPost]
         public IActionResult Create(EmployeeCreateViewModel employeeCreateViewModel)
         {
@@ -68,7 +74,7 @@ namespace EmployeeManagement.Controllers
         {
             HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
             {
-                Employee = _employeeRepository.GetEmployee(1),
+                Employee = _employeeRepository.GetEmployee(id),
                 PageTitle = "Employee Details"
             };
 
