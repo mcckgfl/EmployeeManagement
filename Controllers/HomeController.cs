@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EmployeeManagement.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly IEmployeeRepository _employeeRepository;
@@ -28,6 +29,7 @@ namespace EmployeeManagement.Controllers
             this.logger = logger;
         }
 
+        [AllowAnonymous]
         public ViewResult Index() {
 
             var model = _employeeRepository.GetAllEmployees();
@@ -68,7 +70,7 @@ namespace EmployeeManagement.Controllers
             
             return View();
         }
-
+        [AllowAnonymous]
         public ViewResult Details(int? id)
         {
 
