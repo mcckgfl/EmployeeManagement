@@ -1,4 +1,5 @@
 ﻿//using EmployeeManagement.Utilities;
+using EmployeeManagement.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace EmployeeManagement.ViewModels
         [Required]
         [EmailAddress]
         [Remote(action: "IsEmailInUse", controller: "Account")]
+        [ValidEmailDomain(allowedDomain: "stratumfive.com", ErrorMessage ="Email domain must be company level")]
         public string Email { get; set; }
 
         [Required]
