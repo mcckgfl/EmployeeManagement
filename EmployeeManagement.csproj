@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Administration1\**" />
+    <Content Remove="Views\Administration1\**" />
+    <EmbeddedResource Remove="Views\Administration1\**" />
+    <None Remove="Views\Administration1\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Migrations\20200610205123_Extend_IdentityUser.cs" />
     <Compile Remove="Migrations\20200610205123_Extend_IdentityUser.Designer.cs" />
   </ItemGroup>
