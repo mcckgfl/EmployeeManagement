@@ -16,7 +16,7 @@ namespace EmployeeManagement.ViewModels
         [Required]
         [EmailAddress]
         [Remote(action: "IsEmailInUse", controller: "Account")]
-        [ValidEmailDomain(allowedDomain: "stratumfive.com", ErrorMessage ="Email domain must be company level")]
+        //[ValidEmailDomain(allowedDomain: "stratumfive.com", ErrorMessage ="Email domain must be company level")]
         public string Email { get; set; }
 
         [Required]
