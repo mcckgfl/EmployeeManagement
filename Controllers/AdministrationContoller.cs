@@ -166,7 +166,8 @@ namespace EmployeeManagement.Controllers
 
             return View(model);
         }
-
+        
+        //add comment in github
         [HttpPost]
         public async Task<IActionResult> EditUsersInRole(List<UserRoleViewModel> model, string roleId)
         {
