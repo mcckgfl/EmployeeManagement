@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-//change made here
-//another comment
 namespace EmployeeManagement.Controllers
 {
     public class AccountController : Controller
@@ -117,5 +115,13 @@ namespace EmployeeManagement.Controllers
 
             return View();
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
     }
 }
