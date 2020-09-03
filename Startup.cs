@@ -35,6 +35,7 @@ namespace EmployeeManagement
         public void ConfigureServices(IServiceCollection services)
         {
             //services.AddRazorPages();
+
             services.AddDbContextPool<AppDbContext>(
                 options => options.UseSqlServer(_config.GetConnectionString("EmployeeDBConnection")));
 
@@ -53,6 +54,16 @@ namespace EmployeeManagement
                                 .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
             }).AddXmlSerializerFormatters();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("DeleteRolePolicy",
+                        policy => policy.RequireClaim("Delete Role"));
+                options.AddPolicy("EditRolePolicy",
+                       policy => policy.RequireClaim("Edit Role"));
+                options.AddPolicy("AdminRolePolicy",
+                       policy => policy.RequireClaim("Admin"));
+            });
 
             services.AddScoped<IEmployeeRepository, SqlEmployeeRepository>();
         }
