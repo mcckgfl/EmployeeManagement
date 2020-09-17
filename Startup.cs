@@ -55,14 +55,20 @@ namespace EmployeeManagement
                 options.Filters.Add(new AuthorizeFilter(policy));
             }).AddXmlSerializerFormatters();
 
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = new PathString("/Administration/AccessDenied");
+            });
+
+
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("DeleteRolePolicy",
-                        policy => policy.RequireClaim("Delete Role"));
+                        policy => policy.RequireClaim("Delete Role", "true"));
                 options.AddPolicy("EditRolePolicy",
-                       policy => policy.RequireClaim("Edit Role"));
+                       policy => policy.RequireClaim("Edit Role", "true"));
                 options.AddPolicy("AdminRolePolicy",
-                       policy => policy.RequireClaim("Admin"));
+                       policy => policy.RequireClaim("Admin", "true"));
             });
 
             services.AddScoped<IEmployeeRepository, SqlEmployeeRepository>();
