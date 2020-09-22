@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using EmployeeManagement.Security;
 
 namespace EmployeeManagement
 {
@@ -66,18 +67,23 @@ namespace EmployeeManagement
                 options.AddPolicy("DeleteRolePolicy",
                         policy => policy.RequireClaim("Delete Role", "true"));
 
+                //options.AddPolicy("EditRolePolicy",
+                //        policy => policy.RequireAssertion(context =>
+                //        context.User.IsInRole("Admin") &&
+                //        context.User.HasClaim(claim => claim.Type == "Edit Role" && claim.Value == "true") ||
+                //        context.User.IsInRole("Super Admin")
+                //        ));
+
                 options.AddPolicy("EditRolePolicy",
-                       policy => policy.RequireAssertion(context =>
-                       context.User.IsInRole("Admin") &&
-                       context.User.HasClaim(claim => claim.Type == "Edit Role" && claim.Value == "true") ||
-                       context.User.IsInRole("Super Admin")
-                       ));
-                    
+                        policy => policy.AddRequirements(new ManageAdminRolesAndClaimsRequirement()));
+
+
                 options.AddPolicy("AdminRolePolicy",
                         policy => policy.RequireClaim("Admin", "true"));
             });
 
             services.AddScoped<IEmployeeRepository, SqlEmployeeRepository>();
+            services.AddSingleton<IAuthorizationHandler, CanEditOnlyOtherAdminRolesAndClaimsHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
