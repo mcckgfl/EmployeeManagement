@@ -56,6 +56,16 @@ namespace EmployeeManagement
                 options.Filters.Add(new AuthorizeFilter(policy));
             }).AddXmlSerializerFormatters();
 
+            services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    IConfigurationSection googleAuthNSection =
+                                    _config.GetSection("Authentication:Google");
+
+                    options.ClientId = googleAuthNSection["ClientId"];
+                    options.ClientSecret = googleAuthNSection["ClientSecret"];
+                });
+
             services.ConfigureApplicationCookie(options =>
             {
                 options.AccessDeniedPath = new PathString("/Administration/AccessDenied");
