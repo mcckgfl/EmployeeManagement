@@ -20,7 +20,7 @@ namespace EmployeeManagement.Controllers
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly ILogger<AccountController> logger;
 
-        public AccountController(UserManager<ApplicationUser> userManager, 
+        public AccountController(UserManager<ApplicationUser> userManager,
                                  SignInManager<ApplicationUser> signInManager,
                                  ILogger<AccountController> logger)
         {
@@ -30,7 +30,7 @@ namespace EmployeeManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Logout() 
+        public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
             return RedirectToAction("index", "home");
@@ -40,7 +40,8 @@ namespace EmployeeManagement.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl)
         {
-            LoginViewModel lvm = new LoginViewModel {
+            LoginViewModel lvm = new LoginViewModel
+            {
 
                 ReturnUrl = returnUrl,
                 ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
@@ -74,20 +75,61 @@ namespace EmployeeManagement.Controllers
                     {
                         return Redirect(returnUrl);
                     }
-                    else {
+                    else
+                    {
                         return RedirectToAction("index", "home");
                     }
-                        
-           
+
+
                 }
 
                 ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
-        
+
 
             }
 
             return View();
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            if (token == null || email == null)
+                ModelState.AddModelError("", "invalid password reset token");
+
+
+            return View();
+
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel rpvm)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await userManager.FindByEmailAsync(rpvm.Email);
+                if (user != null)
+                {
+                    var result = await userManager.ResetPasswordAsync(user, rpvm.Token, rpvm.Email);
+                    if (result.Succeeded)
+                    {
+                        return View("ResetPasswordConfirmation");
+                    }
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                    return View(rpvm);
+                }
+                return View("ResetPasswordConfirmation");
+            }
+            return View(rpvm);
+        }
+
+
+
 
         [HttpGet]
         [AllowAnonymous]
@@ -132,11 +174,11 @@ namespace EmployeeManagement.Controllers
 
             var user = await userManager.FindByEmailAsync(email);
 
-            if(user == null)
+            if (user == null)
             {
                 return Json(true);
             }
-            else 
+            else
             {
                 return Json($"Email {email} is already in use");
             }
@@ -144,7 +186,7 @@ namespace EmployeeManagement.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ForgotPassword() 
+        public IActionResult ForgotPassword()
         {
             return View();
         }
@@ -181,10 +223,10 @@ namespace EmployeeManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, City = model.City} ;
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, City = model.City };
                 var result = await userManager.CreateAsync(user, model.Password);
 
-                if (result.Succeeded) 
+                if (result.Succeeded)
                 {
                     var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
@@ -193,7 +235,7 @@ namespace EmployeeManagement.Controllers
 
                     logger.Log(LogLevel.Warning, confirmationLink);
 
-                    if (signInManager.IsSignedIn(User) && User.IsInRole("Admin")) 
+                    if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                     {
                         return RedirectToAction("ListUsers", "Administration");
                     }
@@ -206,7 +248,7 @@ namespace EmployeeManagement.Controllers
                     //return RedirectToAction("index", "home");
                 }
 
-                foreach (var error in result.Errors) 
+                foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("", error.Description);
                 }
@@ -258,7 +300,7 @@ namespace EmployeeManagement.Controllers
             var email = info.Principal.FindFirstValue(ClaimTypes.Email);
             ApplicationUser user = null;
 
-            
+
             if (email != null)
             {
                 user = await userManager.FindByEmailAsync(email);
@@ -270,7 +312,7 @@ namespace EmployeeManagement.Controllers
                 }
             }
 
-            var signInResult = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, 
+            var signInResult = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey,
                                                                             isPersistent: false, bypassTwoFactor: true);
 
             if (signInResult.Succeeded)
